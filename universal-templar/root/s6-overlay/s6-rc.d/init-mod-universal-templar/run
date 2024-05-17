@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+
+## Ubuntu Packages
+[ -f /usr/bin/apt ] && echo "cl-mustache " >> /mod-repo-packages-to-install.list
+
+## Alpine Packages
+[ -f /usr/bin/apk ] && echo "mustache " >> /mod-repo-packages-to-install.list
+
+# Universal Packages
+echo "yq" >> /mod-repo-packages-to-install.list

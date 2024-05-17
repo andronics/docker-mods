@@ -1,0 +1,116 @@
+#!/usr/bin/bash
+
+# Dependencies:
+#  basename
+#  yq
+
+# Exit codes:
+#  0 - success; or test
+#  1 - no video file specified on command line
+#  2 - no audio language specified on command line
+#  3 - no subtitles language specified on command line
+#  4 - mkvmerge or mkvpropedit not found
+#  5 - input video file not found
+#  6 - unable to rename temp video to MKV
+#  7 - unknown eventtype environment variable
+#  8 - unsupported Radarr/Sonarr version (v2)
+#  9 - mkvmerge get media info failed
+# 10 - remuxing completed, but no output file found
+# 11 - source video had no audio or subtitle tracks
+# 12 - log file is not writable
+# 13 - awk script exited abnormally
+# 16 - could not delete the original file
+# 17 - Radarr/Sonarr API error
+# 18 - Radarr/Sonarr job timeout
+# 255 - general error
+
+# Variables
+
+export templar_name="Templar"
+export templar_script=$(basename "$0")
+export templar_version="0.0.1"
+export templar_pid=$$
+
+export templar_config=${templar_config:-"/etc/templar.yml"}
+export templar_log=${templar_log:-"/var/log/templar/templar.log"}
+export templar_maxlog=${templar_maxlog:-"4"}
+export templar_maxlogsize=${templar_maxlogsize:-"512000"}
+export templar_debug=${templar_debug:-"0"}
+
+_usage() {
+    cat <<EOF
+
+${templar_name} v${templar_version}
+
+Source: https://github.com/andronics/docker-mods/universal-templar
+
+Usage:
+    $0 [{-l|--log} <log_file>] [{-d|--debug} <debug_level>]
+
+Options and Arguments:
+
+    -l, --log <log_file>                Log Filename
+                                        [default: ${templar_log}]
+    -d, --debug <debug_level>           Enable debug logging
+                                        [default: ${templar_debug}]
+        --help                          Display this help and exits
+        --version                       Display script version and exits
+
+      
+EOF
+
+}
+
+_version() {
+    cat <<EOF
+${templar_name} v${templar_version}
+EOF
+}
+
+
+# Process Arguments
+unset templar_pos_args
+while (( "$# ")); do
+    case "$1" in
+        -d|--debug)
+            if [ -n "$2" ] && [ ${2:0:1} != "-" ] && [[ "$2" =~ ^[0-9]+$ ]]; then
+                export templar_debug=$2
+                shift 2
+            else
+                export templar_debug=1
+                shift
+            fi
+            ;;
+        --help)
+            _usage
+            exit 0
+            ;;
+        -l|--log)
+            if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+                export templar_log="$2"
+                shift 2
+            else
+                echo "error - option invalid : $1 requires an argument." >&2
+                _usage
+                exit 255
+            fi
+            ;;
+        --version)
+            _version
+            exit 0
+            ;;
+        -*)
+            echo "error : option unknown - $1" >&2
+            _usage
+            exit 255
+            ;;
+        *)
+            # preserve positional arguments
+            templar_pos_args="${templar_pos_args} $1"
+            shift
+    esac
+done
+
+# Set positional arguments in their proper place
+eval set -- "${templar_pos_args}"
+
