@@ -8,5 +8,6 @@ env:
 
 jobs:
   build:
-    uses: andronics/workflows/docker-build.yml@main
+    uses: andronics/workflows/.github/workflows/docker-build.yml@main
     secrets: inherit
+  
