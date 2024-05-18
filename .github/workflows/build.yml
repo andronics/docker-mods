@@ -1,0 +1,12 @@
+name: Build Image
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  ENDPOINT: "andronics/universal-templar"
+  BRANCH: "main"
+
+jobs:
+  build:
+    uses: andronics/workflows/docker-build.yml@main
+    secrets: inherit
