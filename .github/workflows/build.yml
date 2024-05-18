@@ -14,8 +14,8 @@ jobs:
   build:
     uses: andronics/workflows/.github/workflows/docker-build.yml@main
     with:
-      branch: ${{ env.BRANCH }},
-      endpoint: ${{ env.ENDPOINT }}
-      path: ${{ env.PATH }}
+      branch: $BRANCH
+      endpoint: $ENDPOINT
+      path: $PATH
     secrets: inherit
   
