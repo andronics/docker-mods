@@ -8,7 +8,7 @@ on:
 env:
   ENDPOINT: "andronics/universal-templar"
   BRANCH: "main"
-  PATH: "./universal-templar"
+  ROOT: "./universal-templar"
 
 jobs:
   build:
@@ -16,6 +16,6 @@ jobs:
     with:
       branch: $BRANCH
       endpoint: $ENDPOINT
-      path: $PATH
+      root: $ROOT
     secrets: inherit
   
