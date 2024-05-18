@@ -1,13 +1,21 @@
-name: Build Image
+name: Universal Templar - Build Image
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    paths:
+      - 'universal-templar/**'
 
 env:
   ENDPOINT: "andronics/universal-templar"
   BRANCH: "main"
+  PATH: "./universal-templar"
 
 jobs:
   build:
     uses: andronics/workflows/.github/workflows/docker-build.yml@main
+    with:
+      branch: ${{ env.BRANCH }},
+      endpoint: ${{ env.ENDPOINT }}
+      path: ${{ env.PATH }}
     secrets: inherit
   
