@@ -5,17 +5,12 @@ on:
     paths:
       - 'universal-templar/**'
 
-env:
-  ENDPOINT: "andronics/universal-templar"
-  BRANCH: "main"
-  ROOT: "./universal-templar"
-
 jobs:
   build:
     uses: andronics/workflows/.github/workflows/docker-build.yml@main
     with:
-      branch: ${{ env.BRANCH }} 
-      endpoint: ${{ env.ENDPOINT }}
-      root: ${{ env.ROOT }}
+      branch: "main" 
+      endpoint: "andronics/universal-templar"
+      root: "./universal-templar"
     secrets: inherit
   
